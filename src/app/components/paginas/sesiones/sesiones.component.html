@@ -1,0 +1,23 @@
+<h1>Crea una partida</h1>
+
+<form [formGroup]="miForm">
+    <input  formControlName="cant_jugadores" type="text" placeholder="Cantidad de jugadores" />
+    <input formControlName="pantalla" type="text" placeholder="Pantalla del host" />
+    <button (click)="crearPartida()">Crear partida</button>
+</form>
+
+<h1>Elije una partida </h1>
+
+<!--
+<a routerLink="/juego"> Jugar</a>
+-->
+
+<div class="contenedor" *ngFor="let sesion of ListaSesiones2">
+    <div class="titulo">
+        Unirse a partida
+    </div>
+
+    <div class="pantallas" >
+        <div class="pantalla" *ngFor="let pantalla of sesion.pantallas" (click)="seleccionarSesion(sesion.id, pantalla)"> Pantalla # {{pantalla}} </div>
+    </div>
+</div>
