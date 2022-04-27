@@ -31,10 +31,12 @@ export class JuegoComponent implements OnInit {
   mover = true;
   numPantalla = 0;
   espera:number = 0;
+  esperaTotal:number = 0;
   empezado = false;
   proceso = false;
 
   miInterval: any;
+  miInterval2: any;
 
   actuales:number = 0;
   totales:number = 0;
@@ -47,29 +49,44 @@ export class JuegoComponent implements OnInit {
   ngOnInit(): void {
     this.numPantalla = Number(this.cookie.get("Pantalla"))
     this.espera = 4900 * (this.numPantalla-1)
+    this.preguntar()
 
     this.miInterval = setInterval(() => {
+      this.preguntar()
       if (this.empezado && !this.proceso){
         this.empezarAnimacion()
-        this.proceso = false;
+        this.empezarCiclo()
+        this.proceso = true;
       }
     }, 2000); 
   }
 
+  empezarCiclo(){
+    console.log("Ciclo 2 iniciado")
+    this.miInterval = setInterval(() => {
+      console.log("ESPERA: " + this.esperaTotal)
+      this.empezarAnimacion()
+    }, this.esperaTotal); 
+  }
   ngOnDestroy() {
     if (this.miInterval) {
       clearInterval(this.miInterval);
     }
+    if (this.miInterval2) {
+      clearInterval(this.miInterval2);
+    }
   }
+
 
   preguntar(){
     const id = this.cookie.get("Sesion")
     this.miService.preguntar(id).subscribe({
       next: (r) => [
-      console.log("Respuesta: " + r.data),
+      console.log("Respuesta: " + r),
       this.actuales = r.JugadoresActuales[0].JugadoresActuales,
       console.log(this.actuales),
       this.totales = r.JugadoresPermitidos[0].JugadoresPermitidos,
+      this.esperaTotal = this.totales * 4900,
       this.verificar()
     ],
       error: (e) => [console.error(e)],
@@ -79,13 +96,16 @@ export class JuegoComponent implements OnInit {
 
   verificar(){
     if (this.actuales == this.totales){
+      console.log("EMPEZANDO PARTIDA")
       this.empezado = true;
     }
   }
 
   empezarAnimacion(){
-    console.log("2 seg")
-    setTimeout(()=>{ this.mover = false, console.log("2 seg pasads") }, this.espera)
+    this.mover = true
+    setTimeout(()=>{ 
+      this.mover = false 
+    }, this.espera)
   }
 
 }

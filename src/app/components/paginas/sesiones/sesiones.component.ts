@@ -36,6 +36,8 @@ export class SesionesComponent implements OnInit {
         'cant_jugadores':this.f['cant_jugadores'].value, 
         'pantalla':this.f['pantalla'].value 
       }
+
+      console.log("CREAR PARTIDA")
       console.log(miRequest);
 
       this.miService.crearSesion(miRequest).subscribe({
@@ -45,7 +47,7 @@ export class SesionesComponent implements OnInit {
         this.cookie.set("Pantalla", this.f['pantalla'].value),
         this.cookie.set("Sesion", r.data.toString()),
         this.apartarPantalla(),
-        //this.router.navigate(['/juego']),
+        this.router.navigate(['/juego']),
         this.cargarInfo()
       ],
         error: (e) => [console.error(e)],
@@ -113,6 +115,8 @@ export class SesionesComponent implements OnInit {
       'posicion':this.cookie.get("Pantalla")
     }
 
+    console.log("UNIRSE PARTIDA")
+    console.log(miRequest)
     this.miService.unirse(miRequest).subscribe({
       next: (r) => [
       console.log("Respuesta: " + r.data),
